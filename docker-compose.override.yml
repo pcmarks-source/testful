@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  testful:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "2080:80"

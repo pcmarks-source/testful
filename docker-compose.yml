@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  testful:
+    image: ${DOCKER_REGISTRY-}pcmarks/testful
+    build:
+      context: .
+      dockerfile: Dockerfile

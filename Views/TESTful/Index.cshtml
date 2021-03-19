@@ -1,0 +1,259 @@
+﻿@model TESTfulViewModel
+@{
+    ViewData["Title"] = "TESTful";
+}
+
+<form asp-action="" method="post">
+
+    <!-- HTTP Method Selector Dropdown || URL Input Field || Send Request Button -->
+    <div class="row">
+        <div class="col-12">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+
+                    <!-- HTTP Method Selector Dropdown -->
+                    <div class="btn-group">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button" id="method-menu" aria-haspopup="true" aria-expanded="false">
+                                @Model.Method.ToString()
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="method-menu">
+                                @for (int i = 0; i < (int)HTTPMethod.Length; i++) {
+                                    string methodName = ((HTTPMethod)i).ToString();
+                                    int methodValue = i;
+                                    <li>
+                                        <button class="dropdown-item" type="button" role="menuitem" id="@methodName" value="@methodValue" onclick="SetMethod(@methodName, @methodValue)">
+                                            @methodName
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- URL Input Field -->
+                <input asp-for="RequestURL" type="text" class="form-control" placeholder="Network Address" aria-label="URL input field with dropdown button for method selection" />
+
+                <div class="input-group-append">
+
+                    <!-- Send Request Button -->
+                    <button class="btn btn-danger" type="submit">Send Request</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Headers/Body Labels || Media Type Radios -->
+    <div class="row">
+        <div class="col-5 ml-5">
+
+            <!-- Headers Label -->
+            <p>Request Headers</p>
+
+        </div>
+        <div class="col-2">
+
+            <!-- Body Label -->
+            <p>Request Body</p>
+
+        </div>
+        <div class="col-4">
+
+            <!-- Media Type Radios -->
+            <div class="custom-control custom-radio custom-control-inline">
+                <input asp-for="RequestBodyMediaType" type="radio" value="0" class="custom-control-input" id="MediaTypeText" name="RequestBodyMediaType" checked=@(Model.RequestBodyMediaType == MediaType.Text)>
+                <label class="custom-control-label" for="MediaTypeText">Text</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input asp-for="RequestBodyMediaType" type="radio" value="1" class="custom-control-input" id="MediaTypeHTML" name="RequestBodyMediaType" checked=@(Model.RequestBodyMediaType == MediaType.HTML)>
+                <label class="custom-control-label" for="MediaTypeHTML">HTML</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input asp-for="RequestBodyMediaType" type="radio" value="2" class="custom-control-input" id="MediaTypeJson" name="RequestBodyMediaType" checked=@(Model.RequestBodyMediaType == MediaType.Json)>
+                <label class="custom-control-label" for="MediaTypeJson">Json</label>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Header Input Fields || Body Input Field -->
+    <div class="row">
+        <div class="col-5 ml-5">
+
+            <!-- Header Input Fields -->
+            <table class="table table-sm">
+                <tbody>
+
+                    <!-- Host Header -->
+                    <tr>
+                        <th scope="row"></th>
+                        <td>
+                            <div class="custom-checkbox mt-2">
+                                <input class="form-check-input" asp-for="UseHostHeader">
+                                <label class="form-check-label" asp-for="UseHostHeader">Host</label>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <input readonly asp-for="HostHeader" value=@Model.HostHeader type="text" class="form-control" placeholder=@Model.HostHeader aria-label="Input field for Host in request header." />
+                        </td>
+                    </tr>
+
+                    <!-- Agent Header -->
+                    <tr>
+                        <th scope="row"></th>
+                        <td>
+                            <div class="custom-checkbox mt-2">
+                                <input class="form-check-input" asp-for="UseAgentHeader">
+                                <label class="form-check-label" asp-for="UseAgentHeader">Agent</label>
+                            </div>
+                        </td>
+                        <td>
+                            <input asp-for="AgentNameHeader" value=@Model.AgentNameHeader type="text" class="form-control" placeholder=@Model.AgentNameHeader aria-label="Input field for User-Agent name in request header." />
+                        </td>
+                        <td>
+                            <input asp-for="AgentVersionHeader" value=@Model.AgentVersionHeader type="text" class="form-control" placeholder=@Model.AgentVersionHeader aria-label="Input field for User-Agent version in request header." />
+                        </td>
+                    </tr>
+
+                    <!-- Accept -->
+                    <tr>
+                        <th scope="row"></th>
+                        <td>
+                            <div class="custom-checkbox mt-2">
+                                <input class="form-check-input" asp-for="UseAcceptHeader">
+                                <label class="form-check-label" asp-for="UseAcceptHeader">Accept</label>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <input asp-for="AcceptHeader" value=@Model.AcceptHeader type="text" class="form-control" placeholder=@Model.AcceptHeader aria-label="Input field for Accept in request header." />
+                        </td>
+                    </tr>
+
+                    <!-- Connection Header -->
+                    <tr>
+                        <th scope="row"></th>
+                        <td>
+                            <div class="custom-checkbox mt-2">
+                                <input class="form-check-input" asp-for="UseConnectionHeader">
+                                <label class="form-check-label" asp-for="UseConnectionHeader">Connection</label>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <input asp-for="ConnectionHeader" value=@Model.ConnectionHeader type="text" class="form-control" placeholder=@Model.ConnectionHeader aria-label="Input field for Connection request header." />
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-6 mt-2">
+
+            <!-- Body Input Field -->
+            <textarea rows="7" asp-for="RequestBody" class="form-control" placeholder="">@Model.RequestBody</textarea>
+
+        </div>
+    </div>
+
+
+
+    <!----- Horizontal Request/Response Divider ----->
+    <div class="row">
+        <div class="col-12">
+            <hr />
+        </div>
+    </div>
+
+
+
+    <!-- Response Title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center">
+                <h3>Response</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Response Tabs || Response Content Fields -->
+    <div class="row">
+        <div class="col-12">
+
+            <!-- Response Tabs -->
+            <ul class="nav nav-tabs" id="responseTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="responseHeaders-tab" data-toggle="tab" href="#responseHeaders" role="tab" aria-controls="responseHeaders" aria-selected="false" onclick="SetResponseView(0)">Headers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="responseBody-tab" data-toggle="tab" href="#responseBody" role="tab" aria-controls="responseBody" aria-selected="true" onclick="SetResponseView(1)">Body</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="responseCookies-tab" data-toggle="tab" href="#responseCookies" role="tab" aria-controls="responseCookies" aria-selected="false" onclick="SetResponseView(2)">Cookies</a>
+                </li>
+            </ul>
+
+            <!-- Response Content Fields -->
+            <div class="tab-content" id="responseTabContent">
+                <div class="tab-pane" id="responseHeaders" role="tabpanel" aria-labelledby="responseHeaders-tab">
+                    <textarea rows="14" class="form-control" readonly>@Model.ResponseHeader</textarea>
+                    <span class="text-danger"></span>
+                </div>
+                <div class="tab-pane show active" id="responseBody" role="tabpanel" aria-labelledby="responseBody-tab">
+                    <textarea rows="14" class="form-control" readonly>@Model.ResponseBody</textarea>
+                    <span class="text-danger"></span>
+                </div>
+                <div class="tab-pane" id="responseCookies" role="tabpanel" aria-labelledby="responseCookies-tab">
+                    <textarea rows="14" class="form-control" readonly>@Model.ResponseCookies</textarea>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Response Source Readout || Failed to resolve URL Error Readout || Response Status Readout -->
+    <div class="row">
+        <div class="col-4">
+            <div class="text-left">
+
+                <!-- Response Source Readout -->
+                <p>Source: @Model.ResponseURL</p>
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="text-center">
+
+                <!-- Failed to resolve URL Error Readout -->
+                <span asp-validation-for="RequestURL" class="text-danger"></span>
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="text-right">
+
+                <!-- Response Status Readout -->
+                @if (Model.ResponseSuccess == true) {
+                    <p class="text-success">Status: @Model.ResponseStatus</p>
+                } else {
+                    <p class="text-danger">Status: @Model.ResponseStatus</p>
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Hidden Fields -->
+    <div class="hide">
+        <input hidden asp-for="Method" value=@((int)Model.Method) />
+        <input hidden asp-for="RequestURL" value=@Model.RequestURL />
+        <input hidden asp-for="ResponseView" value=@Model.ResponseView />
+    </div>
+
+</form>
