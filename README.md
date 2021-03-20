@@ -1,3 +1,5 @@
+![alt text](https://github.com/pcmarks-source/testful/blob/master/TESTful.jpg?raw=true)
+
 TESTful is a simple WebApp for testing RESTful APIs.
 
 Capable of sending the basic HTTP method requests, delivering a few basic (although customizable) headers, delivering payloads formatted in Json, HTML or Plain-Text and parsing HTTP responses (in a rather ugly fashion).
